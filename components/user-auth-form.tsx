@@ -7,10 +7,36 @@ import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth } from "@/firebase/firebase"
+import { GoogleAuthProvider, signInWithPopup, signInWithRedirect } from "firebase/auth"
+import firebase from "firebase/app"
+
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
+const provider = new GoogleAuthProvider();
+
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+  const [user, loading, error] = useAuthState(auth);
+
+  const handleSignIn = () => {
+    console.log("signing in with google attempt")
+    signInWithPopup(auth, provider)
+      .then((result: firebase.auth.UserCredential) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+        const user = result.user;
+      }).catch((error: firebase.auth.Error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+      })
+    console.log("auth domain " + process.env.FIREBASE_AUTH_DOMAIN);
+  };
+
+
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
   async function onSubmit(event: React.SyntheticEvent) {
@@ -58,13 +84,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           </span>
         </div>
       </div>
-      <Button variant="outline" type="button" disabled={isLoading}>
+      <Button onClick={handleSignIn} variant="outline" type="button" disabled={isLoading}>
         {isLoading ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (
-          <Icons.gitHub className="mr-2 h-4 w-4" />
+          <Icons.google className="mr-2 h-4 w-4" />
         )}{" "}
-        Github
+        Google
       </Button>
     </div>
   )

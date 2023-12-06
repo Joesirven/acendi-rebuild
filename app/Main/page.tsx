@@ -1,6 +1,7 @@
-import React from 'react'
+"use client";
 
-  import { Metadata } from "next"
+import React, { useEffect, useState } from 'react'
+import { Metadata } from "next"
 import Image from "next/image"
 import { PlusCircledIcon } from "@radix-ui/react-icons"
 
@@ -20,13 +21,28 @@ import { PodcastEmptyPlaceholder } from "@/components/podcast-empty-placeholder"
 import { Sidebar } from "@/components/sidebar"
 import { listenNowAlbums, madeForYouAlbums } from "./data/albums"
 import { playlists } from "./data/playlists"
+import { getCurrentUserSubscription, getCurrentUserSubscriptions, getStripePayments } from '@invertase/firestore-stripe-payments'
+import { payments } from '@/firebase/stripe'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth, db } from '@/firebase/firebase'
+import { collection, getDocs } from "firebase/firestore";
 
-export const metadata: Metadata = {
-  title: "Music App",
-  description: "Example music app using the components.",
+// export const metadata: Metadata = {
+//   title: "Music App",
+//   description: "Example music app using the components.",
+// }
+
+interface DocData {
+  email: string;
+  stripeId: string;
+  stripeLink: string;
 }
 
+
+
 export default function MainPage() {
+  const [user, loading, error] = useAuthState(auth);
+
   return (
     <>
       <div className="md:hidden">
@@ -47,6 +63,7 @@ export default function MainPage() {
       </div>
       <div className="hidden md:block">
         <Menu />
+        {user?.displayName}
         <div className="border-t">
           <div className="bg-background">
             <div className="grid lg:grid-cols-5">

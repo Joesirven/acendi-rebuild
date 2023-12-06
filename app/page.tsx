@@ -6,6 +6,7 @@ import { auth } from '@/firebase/firebase';
 import { GoogleAuthProvider, signInWithRedirect } from 'firebase/auth';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { UserAuthForm } from '@/components/user-auth-form';
 
 const provider = new GoogleAuthProvider();
 
@@ -47,7 +48,9 @@ const HomePage = () => {
         {user ? (
           <Button onClick={handleSignOut}>Sign Out</Button>
         ) : (
-          <Button onClick={handleSignIn}>Sign In</Button>
+          <div className="mx-auto flex w-full flex-col justify-left space-y-6 sm:w-[350px]">
+            <UserAuthForm />
+          </div>
         )}
       </header>
       <main>

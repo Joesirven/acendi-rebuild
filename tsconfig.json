@@ -22,7 +22,8 @@
       "@/*": ["./*"],
       "@components/*": ["./components/*"],
       "@styles/*": ["./styles/*"],
-      "@main/*": ["./app/Main/*"]
+      "@main/*": ["./app/Main/*"],
+      "@firebase/*": ["./firebase/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
